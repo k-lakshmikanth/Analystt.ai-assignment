@@ -28,7 +28,7 @@ for page in range(1,21):
     # print(f"page : {page}\nURL : {url}")
     get_products(url)
 
-pd.DataFrame(data).to_csv(r"part1_data.csv")
+pd.DataFrame(data).to_csv(r"part1_data.csv",index=False)
 
 os.system("clear")
 print("Part 1 Ended")
@@ -55,6 +55,6 @@ for product in data:
 
     if count == 200:
         break
-pd.DataFrame(data).to_csv(r"part2_data.csv")
+pd.DataFrame(data).dropna().to_csv(r"part2_data.csv",index=False)
 
 print("Part 2 Ended")
