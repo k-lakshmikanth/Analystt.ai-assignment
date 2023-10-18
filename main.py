@@ -12,7 +12,7 @@ def get_products(url):
     if req.status_code == 200:
         for tag in soup.findAll("div",attrs={"data-component-type":"s-search-result"}):
             try:
-                data.append({"Product URL" : tag.find('div',attrs={"class":"a-section a-spacing-none puis-padding-right-small s-title-instructions-style"}).a['href'],\
+                data.append({"Product URL" : base_url+tag.find('div',attrs={"class":"a-section a-spacing-none puis-padding-right-small s-title-instructions-style"}).a['href'],\
                                     "Product Name":tag.find('span',attrs={"class":"a-size-medium a-color-base a-text-normal"}).text,\
                                     "Product Price":tag.find("span",attrs={"class":"a-price"}).span.text[1:],\
                                     "Rating":tag.find("span",attrs={"class":"a-declarative"}).span.text.split(" ")[0],\
@@ -25,7 +25,7 @@ def get_products(url):
 print("Part 1 Started")
 for page in range(1,21):
     url = f"https://www.amazon.in/s?k=bags&page={page}&crid=2M096C61O4MLT&qid=1653308124&sprefix=ba%2Caps%2C283&ref=sr_pg_1"
-    # print(f"page : {page}\nURL : {url}")
+    # print(f"page : {page}\nURL : {url}") # Debug Purpose
     get_products(url)
 
 pd.DataFrame(data).to_csv(r"part1_data.csv",index=False)
@@ -38,9 +38,9 @@ print("Part 1 Ended")
 print("Part 2 Started")
 count=0
 for product in data:
-    req = get(base_url+product["Product URL"])
+    req = get(product["Product URL"])
     while req.status_code != 200:
-        req = get(base_url+product["Product URL"])
+        req = get(product["Product URL"])
 
     try:
         soup = BeautifulSoup(req.content,'html5lib')
@@ -49,7 +49,7 @@ for product in data:
         product["Manufacturer"] = soup.find("div",attrs={"class":"a-section a-spacing-medium brand-snapshot-flex-row"}).text[3:-2]
         product["Product Description"] = soup.find("meta",attrs={"name":"description"})['content']
         count+=1
-        print(f"Product Count : {count}")
+        # print(f"Product Count : {count}") # Debug Purpose
     except:
         pass
 
